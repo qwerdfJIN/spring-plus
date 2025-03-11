@@ -11,12 +11,20 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidRequestException.class)
-    public ResponseEntity<Map<String, Object>> invalidRequestExceptionException(InvalidRequestException ex) {
+    public ResponseEntity<Map<String, Object>> invalidRequestException(InvalidRequestException ex) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
+        return getErrorResponse(status, ex.getMessage());
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> entityNotFoundException(EntityNotFoundException ex) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
         return getErrorResponse(status, ex.getMessage());
     }
 

@@ -21,6 +21,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @WebMvcTest(TodoController.class)
 class TodoControllerTest {
 
@@ -65,7 +67,7 @@ class TodoControllerTest {
 
         // when
         when(todoService.getTodo(todoId))
-                .thenThrow(new InvalidRequestException("Todo not found"));
+                .thenThrow(new EntityNotFoundException("Todo not found"));
 
         // then
         mockMvc.perform(get("/todos/{todoId}", todoId))
