@@ -10,6 +10,7 @@ import org.example.expert.domain.common.exception.InvalidRequestException;
 import org.example.expert.domain.todo.dto.request.TodoSaveRequest;
 import org.example.expert.domain.todo.dto.response.TodoResponse;
 import org.example.expert.domain.todo.dto.response.TodoSaveResponse;
+import org.example.expert.domain.todo.dto.response.TodoSearchResponse;
 import org.example.expert.domain.todo.entity.Todo;
 import org.example.expert.domain.todo.repository.TodoRepository;
 import org.example.expert.domain.user.dto.response.UserResponse;
@@ -53,8 +54,8 @@ public class TodoService {
 
 	public Page<TodoResponse> getTodos(int page, int size, String weather, LocalDateTime startDate,
 		LocalDateTime endDate) {
-		Pageable pageable = PageRequest.of(page - 1, size);
 
+		Pageable pageable = PageRequest.of(page - 1, size);
 		Page<Todo> todos = todoRepository.findAllByWeatherAndModifiedAtRange(weather, startDate, endDate, pageable);
 
 		return todos.map(todo -> new TodoResponse(
@@ -66,6 +67,13 @@ public class TodoService {
 			todo.getCreatedAt(),
 			todo.getModifiedAt()
 		));
+	}
+
+	public Page<TodoSearchResponse> searchTodos(
+		int page, int size, String title, String nickname, LocalDateTime startDate, LocalDateTime endDate
+	) {
+		Pageable pageable = PageRequest.of(page - 1, size);
+		return todoRepository.findAllByTitleAndNicknameAndCreatedAtRange(title, nickname, startDate, endDate, pageable);
 	}
 
 	public TodoResponse getTodo(long todoId) {
@@ -85,3 +93,4 @@ public class TodoService {
 		);
 	}
 }
+
